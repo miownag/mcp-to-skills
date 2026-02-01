@@ -1,0 +1,37 @@
+{
+  "name": "mcp-to-skills",
+  "version": "0.1.0",
+  "description": "Convert MCP servers to skills to save token",
+  "keywords": [
+    "mcp",
+    "skills"
+  ],
+  "author": {
+    "name": "Mio",
+    "email": "miownag@gmail.com"
+  },
+  "type": "module",
+  "bin": {
+    "m2s": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "bun --watch run src/index.ts --config examples/shadcn.json",
+    "build": "bun build src/index.ts --outdir dist --target node",
+    "build:binary": "bun run build.ts",
+    "format": "bun run biome format --write src"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "^2.3.13"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "esbuild": "^0.27.2",
+    "openai": "^4.96.0"
+  }
+}
