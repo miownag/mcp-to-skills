@@ -260,8 +260,11 @@ main();
       target: 'node18',
       write: false,
       minify: false,
+      external: ['@modelcontextprotocol/sdk'],
       banner: {
-        js: '#!/usr/bin/env node',
+        js: `#!/usr/bin/env node
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);`,
       },
       nodePaths: [join(import.meta.dirname, '../../node_modules')],
     });

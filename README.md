@@ -60,6 +60,9 @@ m2s <config-file> [options]
 ### Examples
 
 ```bash
+# First, install mcp sdk in your project, skill need this to connect to MCP server
+npm install @modelcontextprotocol/sdk
+
 # Basic usage with Anthropic API
 m2s ./claude_desktop_config.json --api-key sk-ant-xxx
 
