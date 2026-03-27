@@ -3,7 +3,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { build } from 'esbuild';
 import type { MCPServerConfig } from '../config/types.ts';
-import { isSSEConfig, isStdioConfig } from '../config/types.ts';
+import {
+  isSSEConfig,
+  isStdioConfig,
+  isStreamableHttpConfig,
+} from '../config/types.ts';
 import type { SkillMetadata } from '../llm/types.ts';
 import type { Prompt, Resource, Tool } from '../mcp/types.ts';
 
@@ -173,6 +177,10 @@ export async function generateCallMjs(skill: SkillFile): Promise<string> {
     transportSetup = `
   const { SSEClientTransport } = await import("@modelcontextprotocol/sdk/client/sse.js");
   transport = new SSEClientTransport(new URL(${JSON.stringify(config.url)}));`;
+  } else if (isStreamableHttpConfig(config)) {
+    transportSetup = `
+  const { StreamableHTTPClientTransport } = await import("@modelcontextprotocol/sdk/client/streamableHttp.js");
+  transport = new StreamableHTTPClientTransport(new URL(${JSON.stringify(config.url)}));`;
   } else {
     const url = (config as { url: string }).url;
     transportSetup = `

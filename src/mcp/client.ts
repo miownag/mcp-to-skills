@@ -2,14 +2,17 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
 import { WebSocketClientTransport } from '@modelcontextprotocol/sdk/client/websocket.js';
+import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import {
   isStdioConfig,
   isSSEConfig,
   isWebSocketConfig,
+  isStreamableHttpConfig,
   type MCPServerConfig,
   type StdioMCPConfig,
   type SSEMCPConfig,
   type WebSocketMCPConfig,
+  type StreamableHttpMCPConfig,
 } from '../config/types.ts';
 import type { MCPServerInfo, Tool, Resource, Prompt } from './types.ts';
 
@@ -29,7 +32,8 @@ interface TransportResult {
   transport:
     | StdioClientTransport
     | SSEClientTransport
-    | WebSocketClientTransport;
+    | WebSocketClientTransport
+    | StreamableHTTPClientTransport;
   cleanup?: () => void;
 }
 
@@ -37,7 +41,7 @@ function createStdioTransport(config: StdioMCPConfig): TransportResult {
   const transport = new StdioClientTransport({
     command: config.command,
     args: config.args,
-    env: config.env ? { ...process.env, ...config.env } : undefined,
+    env: config.env ? { ...process.env, ...config.env } as Record<string, string>: undefined,
   });
   return { transport };
 }
@@ -52,6 +56,13 @@ function createWebSocketTransport(config: WebSocketMCPConfig): TransportResult {
   return { transport };
 }
 
+function createStreamableHttpTransport(
+  config: StreamableHttpMCPConfig,
+): TransportResult {
+  const transport = new StreamableHTTPClientTransport(new URL(config.url));
+  return { transport };
+}
+
 function createTransport(config: MCPServerConfig): TransportResult {
   if (isStdioConfig(config)) {
     return createStdioTransport(config);
@@ -61,6 +72,9 @@ function createTransport(config: MCPServerConfig): TransportResult {
   }
   if (isWebSocketConfig(config)) {
     return createWebSocketTransport(config);
+  }
+  if (isStreamableHttpConfig(config)) {
+    return createStreamableHttpTransport(config);
   }
   throw new Error('Unknown transport type');
 }

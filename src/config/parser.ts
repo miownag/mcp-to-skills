@@ -104,8 +104,20 @@ export function parseConfigFile(filePath: string): MCPConfigFile {
         continue;
       }
 
+      if (transport === 'streamable-http') {
+        validatedServers[name] = {
+          url: sc.url,
+          transport: 'streamable-http',
+          headers:
+            sc.headers && typeof sc.headers === 'object'
+              ? (sc.headers as Record<string, string>)
+              : undefined,
+        };
+        continue;
+      }
+
       throw new ConfigParseError(
-        `Invalid config for server "${name}": url-based config requires transport to be "sse" or "websocket"`,
+        `Invalid config for server "${name}": url-based config requires transport to be "sse", "websocket", or "streamable-http"`,
       );
     }
 

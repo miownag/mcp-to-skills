@@ -97,6 +97,10 @@ m2s accepts the standard Claude Desktop MCP configuration format:
     "remote-ws": {
       "url": "wss://example.com/ws",
       "transport": "websocket"
+    },
+    "remote-http": {
+      "url": "https://example.com/mcp",
+      "transport": "streamable-http"
     }
   }
 }
@@ -118,6 +122,7 @@ Each MCP server generates a Markdown skill file with:
 - **stdio**: Local process via stdin/stdout
 - **SSE**: HTTP Server-Sent Events
 - **WebSocket**: WebSocket connections
+- **Streamable HTTP**: HTTP-based streaming transport (MCP 2025-03-26 spec)
 
 ## License
 

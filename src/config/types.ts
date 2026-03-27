@@ -16,10 +16,17 @@ export interface WebSocketMCPConfig {
   headers?: Record<string, string>;
 }
 
+export interface StreamableHttpMCPConfig {
+  url: string;
+  transport: 'streamable-http';
+  headers?: Record<string, string>;
+}
+
 export type MCPServerConfig =
   | StdioMCPConfig
   | SSEMCPConfig
-  | WebSocketMCPConfig;
+  | WebSocketMCPConfig
+  | StreamableHttpMCPConfig;
 
 export interface MCPConfigFile {
   mcpServers: Record<string, MCPServerConfig>;
@@ -41,10 +48,17 @@ export function isWebSocketConfig(
   return 'transport' in config && config.transport === 'websocket';
 }
 
+export function isStreamableHttpConfig(
+  config: MCPServerConfig,
+): config is StreamableHttpMCPConfig {
+  return 'transport' in config && config.transport === 'streamable-http';
+}
+
 export function getTransportType(
   config: MCPServerConfig,
-): 'stdio' | 'sse' | 'websocket' {
+): 'stdio' | 'sse' | 'websocket' | 'streamable-http' {
   if (isStdioConfig(config)) return 'stdio';
   if (isSSEConfig(config)) return 'sse';
+  if (isStreamableHttpConfig(config)) return 'streamable-http';
   return 'websocket';
 }

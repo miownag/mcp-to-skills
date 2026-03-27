@@ -17,4 +17,4 @@ export interface MCPServerInfo {
   };
 }
 
-export { Tool, Resource, Prompt };
+export type { Tool, Resource, Prompt };
